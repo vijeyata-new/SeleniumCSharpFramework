@@ -17,30 +17,26 @@ namespace SeleniumCSharpFramework.Pages
         }
 
         IWebElement errorMsg => driver.FindElement(By.XPath("//h3[contains(text(),'Sorry')]"));
+        IWebElement cartIcon => driver.FindElement(By.CssSelector("a.shopping_cart_link"));
 
-        public void launchUrl(string Url)
+
+
+        public void loginUser(String Username, String Password)
         {
-            driver.launchSauceUrl(Url);
+            driver.LoginSauceUser(Username, Password);
         }
 
-        public void login(String Username, String Password)
+        public bool isLoggedin()
         {
-            driver.loginSauceUser(Username, Password);
-
-            if (Username.Equals("standard_user"))
+            try
             {
-                String url = driver.Url;
-                Assert.That(url.Equals("https://www.saucedemo.com/inventory.html"));
-                Console.WriteLine("User logged in successfully");
+                return cartIcon.Displayed;
             }
-            else if(Username.Equals("locked_out_user"))
+            catch (NoSuchElementException)
             {
-                if(errorMsg!= null)
-                {
-                    Assert.Pass("Not logged in. Error Message-" + errorMsg.Text);
-                    Console.WriteLine("User not logged in");
-                }
+                return false;
             }
+            
         }
     }
 }

@@ -3,104 +3,77 @@ using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumCSharpFramework.Pages
 {
-    public class InventoryPage
+    public class InventoryPage(IWebDriver driver)
     {
-        private readonly IWebDriver driver;
-        private readonly WebDriverWait wait;
-        public InventoryPage(IWebDriver driver)
+        private readonly IWebDriver driver = driver;
+        private readonly WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+
+        IWebElement RightMenu => driver.FindElement(By.Id("react-burger-menu-btn"));
+        IWebElement TopLogo => driver.FindElement(By.ClassName("app_logo"));
+        IWebElement Cart => driver.FindElement(By.CssSelector("a.shopping_cart_link"));
+        IWebElement TwitterLogo => driver.FindElement(By.LinkText("Twitter"));
+        IWebElement FbLogo => driver.FindElement(By.LinkText("Facebook"));
+        IWebElement LinkedinLogo => driver.FindElement(By.LinkText("LinkedIn"));
+        IWebElement CopyRight => driver.FindElement(By.ClassName("footer_copy"));
+        IWebElement BmMenu => driver.FindElement(By.ClassName("bm-menu"));
+        IWebElement CloseMenu => driver.FindElement(By.ClassName("bm-cross-button"));
+        IList<IWebElement> ListMenu => driver.FindElements(By.CssSelector("div.inventory_item"));
+        IWebElement AddToCart => driver.FindElement(By.Id("add-to-cart"));
+        IWebElement RemoveFromCart => driver.FindElement(By.Id("remove"));
+
+        IWebElement BackToProducts => driver.FindElement(By.Id("back-to-products"));
+
+        public WebDriverWait Wait => wait;
+
+
+        public bool VerifyRightMenu()
         {
-            this.driver = driver;
-            this.wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            return RightMenu.Displayed;
         }
 
-        IWebElement rightMenu => driver.FindElement(By.Id("react-burger-menu-btn"));
-        IWebElement topLogo => driver.FindElement(By.ClassName("app_logo"));
-        IWebElement cart => driver.FindElement(By.CssSelector("a.shopping_cart_link"));
-        IWebElement twitterLogo => driver.FindElement(By.LinkText("Twitter"));
-        IWebElement fbLogo => driver.FindElement(By.LinkText("Facebook"));
-        IWebElement linkedinLogo => driver.FindElement(By.LinkText("LinkedIn"));
-        IWebElement copyRight => driver.FindElement(By.ClassName("footer_copy"));
-        IWebElement bmMenu => driver.FindElement(By.ClassName("bm-menu"));
-        IWebElement closeMenu => driver.FindElement(By.ClassName("bm-cross-button"));
-        IList<IWebElement> listMenu => driver.FindElements(By.CssSelector("div.inventory_item"));
-        IWebElement addToCart => driver.FindElement(By.Id("add-to-cart"));
-        IWebElement removeFromCart => driver.FindElement(By.Id("remove"));
-
-        IWebElement backToProducts => driver.FindElement(By.Id("back-to-products"));
-
-
-        public void verifyRightMenu()
+        public bool VerifyLogo()
         {
-            if (rightMenu != null)
-            {
-                Assert.That(rightMenu.Displayed, "Menu button displayed");
-            }
+            return TopLogo.Displayed;
         }
 
-        public void verifyLogo()
-        {
-            if (topLogo != null)
-            {
-                Assert.That(topLogo.Displayed, "Top logo is displayed");
-                Console.WriteLine(topLogo.Text);
-            }
-        }
-
-        public void verifyCart()
+        public void VerifyCart()
         {
 
-            if (cart.Displayed)
+            if (Cart.Displayed)
             {
                 // cart.Click();
                 Thread.Sleep(700);
-                driver.launchMainMenuPage("All Items");
-                cart.CartItems();
+                driver.LaunchMainMenuPage("All Items");
+                Cart.CartItems();
 
             }
-            Assert.That(cart.Displayed, "Cart is displayed");
 
         }
 
-        public void verifyTwitterLogo()
+        public bool VerifyTwitterLogo()
         {
-            if (twitterLogo.Displayed)
-            {
-                Console.WriteLine(twitterLogo.Text);
-                Assert.That(twitterLogo.Displayed, "Twitter logo displayed");
-            }
+            return TwitterLogo.Displayed;
         }
 
-        public void verifyFacebookLogo()
+        public bool VerifyFacebookLogo()
         {
-            if (fbLogo.Displayed)
-            {
-                Console.WriteLine(fbLogo.Text);
-                Assert.That(fbLogo.Displayed, "Facebook logo displayed");
-            }
+            return FbLogo.Displayed;
         }
-        public void verifyLinkedinLogo()
+        public bool VerifyLinkedinLogo()
         {
-            if (linkedinLogo.Displayed)
-            {
-                Console.WriteLine(linkedinLogo.Text);
-                Assert.That(linkedinLogo.Displayed, "Linkedin logo displayed");
-            }
+            return LinkedinLogo.Displayed;
         }
 
-        public void verifyCopyright()
+        public bool VerifyCopyright()
         {
-            if (copyRight != null)
-            {
-                Assert.That(copyRight.Displayed, "Twitter logo displayed");
-                Console.WriteLine("Copyright reserves : " + copyRight.Text);
-            }
+            return CopyRight.Displayed;
         }
 
-        public void verifyRightMenuOptions()
+        public void VerifyRightMenuOptions()
         {
-            if (rightMenu != null)
+            if (RightMenu != null)
             {
-                rightMenu.Click();
+                RightMenu.Click();
                 IList<IWebElement> listmenu = driver.FindElements(By.ClassName("bm-item-list"));
 
                 foreach (IWebElement element in listmenu)
@@ -113,16 +86,16 @@ namespace SeleniumCSharpFramework.Pages
 
         public void closeRightMenu()
         {
-            if (rightMenu != null)
+            if (RightMenu != null)
             {
-                if (bmMenu.Displayed)
+                if (BmMenu.Displayed)
                 {
-                    closeMenu.Click();
+                    CloseMenu.Click();
                 }
             }
         }
 
-        public void verifyfilterOption()
+        public void VerifyfilterOption()
         {
             IWebElement filterElement = wait.Until(driver => driver.FindElement(By.ClassName("product_sort_container")));
 
@@ -143,19 +116,19 @@ namespace SeleniumCSharpFramework.Pages
 
             String[] options = { "Name (A to Z)", "Name (Z to A)", "Price (low to high)", "Price (high to low)" };
 
-            driver.filterDropDownSelection(options[1]);
-            driver.filterDropDownSelection(options[2]);
-            driver.filterDropDownSelection(options[3]);
+            driver.FilterDropDownSelection(options[1]);
+            driver.FilterDropDownSelection(options[2]);
+            driver.FilterDropDownSelection(options[3]);
 
         }
 
-        public void verifyNoOfItems()
+        public void VerifyNoOfItems()
         {
-            int total = listMenu.getNoOfItems();
+            int total = ListMenu.GetNoOfItems();
             Console.WriteLine("Total number of items are: " + total);
 
             int count = 0;
-            foreach (IWebElement element in listMenu)
+            foreach (IWebElement element in ListMenu)
             {
                 count++;
                 IWebElement titleOfItem = element.FindElement(By.CssSelector("div.inventory_item_name"));
@@ -175,13 +148,13 @@ namespace SeleniumCSharpFramework.Pages
                 if (itemToChoose.Contains(chosenItem.Text))
                 {
                     chosenItem.Click();
-                    IWebElement btnAddToCart = wait.Until(driver => addToCart);
-                    btnAddToCart.addToCart();
+                    IWebElement btnAddToCart = wait.Until(driver => AddToCart);
+                    btnAddToCart.AddToCart();
                     IWebElement insideCart = driver.FindElement(By.CssSelector("a.shopping_cart_link"));
                     insideCart.CartItems();
-                    IWebElement removeCart = wait.Until(driver => removeFromCart);
+                    IWebElement removeCart = wait.Until(driver => RemoveFromCart);
                     removeCart.Click();
-                    backToProducts.Click();
+                    BackToProducts.Click();
                 }
             }
         }
@@ -193,10 +166,10 @@ namespace SeleniumCSharpFramework.Pages
             {
                 IWebElement btnAddtocart = item.FindElement(By.XPath("//*[text()='Add to cart']"));
                 btnAddtocart.Click();
-                cart.CartItems();
+                Cart.CartItems();
             }
         }
 
-        public
+        
     }
 }

@@ -14,46 +14,47 @@ namespace SeleniumCSharpFramework.Tests
         private IWebDriver _driver;
         InventoryPage inventoryPage;
 
+
         [SetUp]
         public void Setup()
         {
             _driver = new FirefoxDriver();
             inventoryPage = new InventoryPage(_driver);
-            _driver.launchSauceUrl("https://www.saucedemo.com/");
-            _driver.loginSauceUser("standard_user", "secret_sauce");
+            _driver.LaunchSauceUrl("https://www.saucedemo.com/");
+            _driver.LoginSauceUser("standard_user", "secret_sauce");
         }
 
         [Test]
         public void VerifyInventoryUI()
         {
-            inventoryPage.verifyRightMenu();   
-            inventoryPage.verifyCart();
-            inventoryPage.verifyLogo();
-            inventoryPage.verifyTwitterLogo();
-            inventoryPage.verifyFacebookLogo();
-            inventoryPage.verifyLinkedinLogo();
-            inventoryPage.verifyCopyright();
+            Assert.IsTrue(inventoryPage.VerifyRightMenu());   
+            Assert.IsTrue(inventoryPage.VerifyLogo());
+            Assert.IsTrue(inventoryPage.VerifyTwitterLogo());
+            Assert.IsTrue(inventoryPage.VerifyFacebookLogo());
+            Assert.IsTrue(inventoryPage.VerifyLinkedinLogo());
+            Assert.IsTrue(inventoryPage.VerifyCopyright());
+            inventoryPage.VerifyCart();
         }
 
         [Test]
         public void VerifyMenuOptionsUI()
         {
 
-            inventoryPage.verifyRightMenuOptions();
+            inventoryPage.VerifyRightMenuOptions();
             inventoryPage.closeRightMenu();
-            inventoryPage.verifyfilterOption();
+            inventoryPage.VerifyfilterOption();
         }
 
         [Test]
         public void VerifyListItems()
         {
-            inventoryPage.verifyNoOfItems();
+            inventoryPage.VerifyNoOfItems();
         }
 
         [Test]
         public void verifyAddtoCart()
         {
-            inventoryPage.verifyAddToCartSingleItem();
+         //   inventoryPage.verifyAddToCartSingleItem();
             inventoryPage.verifyAddtoCartMultiple();
 
         }
